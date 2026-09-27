@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UNI Library Chatbot</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+          <script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+        fontCache: 'global'
+    }
+};
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">📚</div>
+
+                <div>
+                    <h2>UNI Library</h2>
+                    <p>Thư viện HVPN Việt Nam</p>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+
+                <button class="menu-item active">
+                    <span>💬</span>
+                    Chatbot tra cứu
+                </button>
+
+                <div class="menu-title">
+                    GỢI Ý TRA CỨU
+                </div>
+
+                <button class="suggestion"
+                        onclick="quickQuestion('Thư viện có bao nhiêu sách?')">
+                    📚 Tổng số sách
+                </button>
+
+                <button class="suggestion"
+                        onclick="quickQuestion('Cho tôi xem danh sách sách')">
+                    📖 Danh sách sách
+                </button>
+
+                <button class="suggestion"
+                        onclick="quickQuestion('Tìm sách Python')">
+                    💻 Sách Python
+                </button>
+
+                <button class="suggestion"
+                        onclick="quickQuestion('Tìm sách Marketing')">
+                    📢 Sách Marketing
+                </button>
+
+                <button class="suggestion"
+                        onclick="quickQuestion('Tìm sách trí tuệ nhân tạo')">
+                    🤖 Sách AI
+                </button>
+
+            </div>
+
+            <div class="sidebar-bottom">
+
+                <div class="status">
+                    <span class="status-dot"></span>
+
+                    <div>
+                        <strong>Hệ thống hoạt động</strong>
+                        <small>Đang kết nối cơ sở dữ liệu</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <!-- HEADER -->
+            <header class="header">
+
+                <div class="header-title">
+
+                    <div class="bot-avatar">
+                        🤖
+                    </div>
+
+                    <div>
+                        <h1>Chatbot tra cứu thư viện</h1>
+
+                        <div class="online">
+                            <span></span>
+                            Trực tuyến
+                        </div>
+                    </div>
+
+                </div>
+
+             <div class="header-actions">
+
+    <button title="Thông tin">
+    </button>
+
+    <!-- 2 thành viên -->
+    <div class="members">
+
+        <div class="member">
+
+    <img src="{{ url_for('static', filename='images/anh1.jpg') }}"
+         alt="Tạ Thị Hồng">
+
+    <div class="member-info">
+        <span class="member-name">Tạ Thị Hồng</span>
+        <span class="member-id">Mã SV: 2374820073</span>
+    </div>
+
+</div>
+
+
+<div class="member">
+
+    <img src="{{ url_for('static', filename='images/anh2.jpg') }}"
+         alt="Nguyễn Hương Giang">
+
+    <div class="member-info">
+        <span class="member-name">Nguyễn Hương Giang</span>
+        <span class="member-id">Mã SV: 2374820047</span>
+    </div>
+
+</div>
+    </div>
+
+</div>
+
+            </header>
+
+
+            <!-- CHAT -->
+            <section class="chat-container">
+
+                <div id="chat-box">
+
+                    <!-- WELCOME MESSAGE -->
+                    <div class="welcome">
+
+                        <div class="welcome-icon">
+                            📚
+                        </div>
+
+                        <h2>Xin chào! 👋</h2>
+
+                        <p>
+                            Mình là <strong>UNI Library Chatbot</strong>,
+                            trợ lý tra cứu sách của
+                            <strong>Thư viện Học viện Phụ nữ Việt Nam</strong>.
+                        </p>
+
+                        <p>
+                            Bạn có thể hỏi mình về tên sách, tác giả,
+                            thể loại hoặc số lượng sách.
+                        </p>
+
+                        <div class="quick-box">
+
+    <button onclick="showLibraryInfo('total')">
+        📚
+        <span>Tổng số sách</span>
+    </button>
+
+    <button onclick="showLibraryInfo('all')">
+        📖
+        <span>Danh sách sách</span>
+    </button>
+
+    <button onclick="showLibraryInfo('python')">
+        💻
+        <span>Sách Python</span>
+    </button>
+
+    <button onclick="showLibraryInfo('marketing')">
+        📢
+        <span>Sách Marketing</span>
+    </button>
+
+    <button onclick="showLibraryInfo('ai')">
+        🤖
+        <span>Sách AI</span>
+    </button>
+
+    <button onclick="showLibraryInfo('women')">
+        👩
+        <span>Sách về phụ nữ</span>
+    </button>
+
+</div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- INPUT -->
+            <div class="input-area">
+
+                <div class="input-wrapper">
+
+                    <textarea
+                        id="user-input"
+                        placeholder="Nhập câu hỏi về sách..."
+                        rows="1"></textarea>
+
+                    <button
+                        class="send-button"
+                        onclick="sendMessage()"
+                        title="Gửi câu hỏi">
+
+                        ➤
+
+                    </button>
+
+                </div>
+
+                <p class="input-note">
+                    Nhấn <strong>Enter</strong> để gửi •
+                    <strong>Shift + Enter</strong> để xuống dòng
+                </p>
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <footer>
+
+                <span>📚 UNI Library Chatbot</span>
+
+                <span>•</span>
+
+                <span>Học viện Phụ nữ Việt Nam</span>
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
