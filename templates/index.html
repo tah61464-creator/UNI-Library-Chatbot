@@ -40,16 +40,24 @@ window.MathJax = {
                 </div>
             </div>
 
-            <div class="sidebar-menu">
+           <div class="sidebar-menu">
 
-                <button class="menu-item active">
-                    <span>💬</span>
-                    Chatbot tra cứu
-                </button>
+    <button class="menu-item active" onclick="showChat()">
+        <span>💬</span>
+        Chatbot tra cứu
+    </button>
 
-                <div class="menu-title">
-                    GỢI Ý TRA CỨU
-                </div>
+    <button class="menu-item" onclick="showChatHistory()">
+        <span>🕘</span>
+        Lịch sử chat
+    </button>
+<button class="menu-item" onclick="showLibraryStatistics()">
+    <span>📊</span>
+    Thống kê thư viện
+</button>
+    <div class="menu-title">
+        GỢI Ý TRA CỨU
+    </div>
 
                 <button class="suggestion"
                         onclick="quickQuestion('Thư viện có bao nhiêu sách?')">
@@ -119,9 +127,8 @@ window.MathJax = {
 
              <div class="header-actions">
 
-    <button title="Thông tin">
-    </button>
-
+    <div class="header-actions">
+        
     <!-- 2 thành viên -->
     <div class="members">
 
@@ -159,7 +166,138 @@ window.MathJax = {
             <!-- CHAT -->
             <section class="chat-container">
 
-                <div id="chat-box">
+    <div id="chat-box">
+
+        <!-- ==================================================
+     THỐNG KÊ THƯ VIỆN
+     ================================================== -->
+
+<div id="library-statistics-box" style="display: none;">
+
+    <div class="statistics-header">
+        <div>
+            <h2>📊 Thống kê thư viện</h2>
+            <p>Tổng quan về dữ liệu sách trong thư viện</p>
+        </div>
+    </div>
+
+
+    <!-- 4 CARD THỐNG KÊ -->
+
+    <div class="statistics-grid">
+
+        <!-- Tổng sách -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <div class="stat-number"
+                 id="stat-total-books">
+                0
+            </div>
+
+            <div class="stat-title">
+                Tổng số sách
+            </div>
+
+        </div>
+
+
+        <!-- Tác giả -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👤
+            </div>
+
+            <div class="stat-number"
+                 id="stat-total-authors">
+                0
+            </div>
+
+            <div class="stat-title">
+                Tác giả
+            </div>
+
+        </div>
+
+
+        <!-- Thể loại -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📂
+            </div>
+
+            <div class="stat-number"
+                 id="stat-total-categories">
+                0
+            </div>
+
+            <div class="stat-title">
+                Thể loại
+            </div>
+
+        </div>
+
+
+        <!-- Nhà xuất bản -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🏢
+            </div>
+
+            <div class="stat-number"
+                 id="stat-total-publishers">
+                0
+            </div>
+
+            <div class="stat-title">
+                Nhà xuất bản
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- THỐNG KÊ THEO THỂ LOẠI -->
+
+    <div class="category-statistics">
+
+        <div class="category-header">
+            <div>
+                <h3>📚 Số sách theo thể loại</h3>
+                <p>Phân bố đầu sách theo từng thể loại</p>
+            </div>
+        </div>
+
+
+        <div id="category-list">
+
+            <div class="history-empty">
+                ⏳ Đang tải dữ liệu...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <!-- LỊCH SỬ CHAT -->
+        <div id="chat-history-box" style="display: none;">
+
+            <h2>🕘 Lịch sử trò chuyện</h2>
+
+            <div id="history-list">
+                ⏳ Đang tải lịch sử...
+            </div>
+
+        </div>
 
                     <!-- WELCOME MESSAGE -->
                     <div class="welcome">

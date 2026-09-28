@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quản lý sách - UNI Library</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #263238;
+        }
+
+        .header {
+            background: #073b5c;
+            color: white;
+            padding: 20px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 25px;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .top-bar h2 {
+            margin: 0;
+        }
+
+        .btn-add {
+            border: none;
+            background: #087f5b;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-add:hover {
+            background: #066b4d;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+        th {
+            background: #eaf2f8;
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+            border-top: 1px solid #edf1f4;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f8fbfd;
+        }
+
+        .btn-edit {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .btn-delete {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #78909c;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #78909c;
+        }
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 18px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+
+        <div>
+            <h1>📚 UNI Library</h1>
+            <p>Quản lý sách thư viện Học viện Phụ nữ Việt Nam</p>
+        </div>
+
+        <div>
+            <a href="/" style="color:white; text-decoration:none;">
+                ← Về chatbot
+            </a>
+        </div>
+<a href="/admin/logout" class="btn-logout">
+    🚪 Đăng xuất
+</a>
+    </div>
+
+
+    <div class="container">
+
+        <div class="top-bar">
+
+            <div>
+                <h2>📖 Danh sách sách</h2>
+            </div>
+
+            <button class="btn-add" onclick="showAddBookForm()">
+    ➕ Thêm sách
+</button>
+
+        </div>
+<!-- ==========================================
+     FORM THÊM SÁCH
+========================================== -->
+
+<div id="add-book-form"
+     style="
+        display:none;
+        background:white;
+        padding:25px;
+        border-radius:12px;
+        margin-bottom:20px;
+        box-shadow:0 3px 12px rgba(0,0,0,0.06);
+     ">
+
+    <h2 style="margin-top:0;">
+        ➕ Thêm sách mới
+    </h2>
+
+
+    <form id="book-form">
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(2, 1fr);
+            gap:15px;
+        ">
+
+            <div>
+                <label>Mã sách</label>
+
+                <input
+                    type="text"
+                    id="ma_sach"
+                    required
+                    placeholder="Ví dụ: S013"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+
+            <div>
+                <label>Tên sách</label>
+
+                <input
+                    type="text"
+                    id="ten_sach"
+                    required
+                    placeholder="Nhập tên sách"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+
+            <div>
+                <label>Tác giả</label>
+
+                <input
+                    type="text"
+                    id="tac_gia"
+                    required
+                    placeholder="Nhập tên tác giả"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+
+            <div>
+                <label>Thể loại</label>
+
+                <input
+                    type="text"
+                    id="the_loai"
+                    required
+                    placeholder="Ví dụ: Lập trình"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+
+            <div>
+                <label>Năm xuất bản</label>
+
+                <input
+                    type="number"
+                    id="nam_xuat_ban"
+                    required
+                    placeholder="2026"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+
+            <div>
+                <label>Nhà xuất bản</label>
+
+                <input
+                    type="text"
+                    id="nha_xuat_ban"
+                    required
+                    placeholder="Nhập nhà xuất bản"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+
+            <div>
+                <label>Vị trí</label>
+
+                <input
+                    type="text"
+                    id="vi_tri"
+                    required
+                    placeholder="Ví dụ: Kệ A1 - Tầng 1"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+
+            <div>
+                <label>Số lượng</label>
+
+                <input
+                    type="number"
+                    id="so_luong"
+                    required
+                    min="0"
+                    value="1"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:6px;
+                        border:1px solid #ddd;
+                        border-radius:6px;
+                    "
+                >
+            </div>
+
+        </div>
+
+
+        <div style="margin-top:15px;">
+
+            <label>Mô tả</label>
+
+            <textarea
+                id="mo_ta"
+                rows="4"
+                placeholder="Nhập mô tả sách..."
+                style="
+                    width:100%;
+                    padding:10px;
+                    margin-top:6px;
+                    border:1px solid #ddd;
+                    border-radius:6px;
+                    resize:vertical;
+                "
+            ></textarea>
+
+        </div>
+
+
+        <div style="
+            margin-top:20px;
+            display:flex;
+            gap:10px;
+        ">
+
+            <button
+                type="submit"
+                style="
+                    border:none;
+                    background:#087f5b;
+                    color:white;
+                    padding:11px 18px;
+                    border-radius:7px;
+                    cursor:pointer;
+                "
+            >
+                💾 Lưu sách
+            </button>
+
+
+            <button
+                type="button"
+                onclick="hideAddBookForm()"
+                style="
+                    border:none;
+                    background:#78909c;
+                    color:white;
+                    padding:11px 18px;
+                    border-radius:7px;
+                    cursor:pointer;
+                "
+            >
+                Hủy
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Mã sách</th>
+                        <th>Tên sách</th>
+                        <th>Tác giả</th>
+                        <th>Thể loại</th>
+                        <th>Năm xuất bản</th>
+                        <th>Nhà xuất bản</th>
+                        <th>Vị trí</th>
+                        <th>Số lượng</th>
+                        <th>Thao tác</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="book-list">
+
+                    <tr>
+                        <td colspan="10" class="loading">
+                            ⏳ Đang tải danh sách sách...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // ==========================================
+        // TẢI DANH SÁCH SÁCH
+        // ==========================================
+
+        async function loadBooks() {
+
+            const bookList =
+                document.getElementById("book-list");
+
+
+            try {
+
+                const response =
+                    await fetch("/admin/books");
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Không thể lấy danh sách sách"
+                    );
+
+                }
+
+
+                const books =
+                    await response.json();
+
+
+                console.log(
+                    "DANH SÁCH SÁCH:",
+                    books
+                );
+
+
+                if (
+                    !books ||
+                    books.length === 0
+                ) {
+
+                    bookList.innerHTML = `
+                        <tr>
+                            <td colspan="10" class="empty">
+                                📚 Chưa có sách trong thư viện.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+
+                }
+
+
+                bookList.innerHTML = "";
+
+
+                books.forEach(function(book) {
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    row.innerHTML = `
+
+                        <td>${book.id ?? ""}</td>
+
+                        <td>${book.ma_sach ?? ""}</td>
+
+                        <td>${book.ten_sach ?? ""}</td>
+
+                        <td>${book.tac_gia ?? ""}</td>
+
+                        <td>${book.the_loai ?? ""}</td>
+
+                        <td>${book.nam_xuat_ban ?? ""}</td>
+
+                        <td>${book.nha_xuat_ban ?? ""}</td>
+
+                        <td>${book.vi_tri ?? ""}</td>
+
+                        <td>${book.so_luong ?? 0}</td>
+
+                        <td>
+
+                            <button
+                                class="btn-edit"
+                                onclick="editBook(${book.id})">
+                                ✏️ Sửa
+                            </button>
+
+                            <button
+                                class="btn-delete"
+                                onclick="deleteBook(${book.id})">
+                                🗑️ Xóa
+                            </button>
+
+                        </td>
+
+                    `;
+
+
+                    bookList.appendChild(row);
+
+                });
+
+
+            } catch (error) {
+
+                console.error(
+                    "Lỗi tải sách:",
+                    error
+                );
+
+
+                bookList.innerHTML = `
+                    <tr>
+                        <td colspan="10" class="empty">
+                            ❌ Không thể tải danh sách sách.
+                        </td>
+                    </tr>
+                `;
+
+            }
+
+        }
+
+
+
+       // ==========================================
+// SỬA SÁCH
+// ==========================================
+
+async function editBook(id) {
+
+    try {
+
+        const response = await fetch("/admin/books");
+
+        if (!response.ok) {
+            throw new Error("Không thể lấy danh sách sách.");
+        }
+
+        const books = await response.json();
+
+        const book = books.find(function(item) {
+            return item.id === id;
+        });
+
+        if (!book) {
+
+            alert("❌ Không tìm thấy sách.");
+
+            return;
+        }
+
+        // Hiện form
+        document.getElementById(
+            "add-book-form"
+        ).style.display = "block";
+
+
+        // Điền thông tin sách vào form
+
+        document.getElementById(
+            "ma_sach"
+        ).value = book.ma_sach || "";
+
+
+        document.getElementById(
+            "ten_sach"
+        ).value = book.ten_sach || "";
+
+
+        document.getElementById(
+            "tac_gia"
+        ).value = book.tac_gia || "";
+
+
+        document.getElementById(
+            "the_loai"
+        ).value = book.the_loai || "";
+
+
+        document.getElementById(
+            "nam_xuat_ban"
+        ).value = book.nam_xuat_ban || "";
+
+
+        document.getElementById(
+            "nha_xuat_ban"
+        ).value = book.nha_xuat_ban || "";
+
+
+        document.getElementById(
+            "vi_tri"
+        ).value = book.vi_tri || "";
+
+
+        document.getElementById(
+            "so_luong"
+        ).value = book.so_luong || 0;
+
+
+        document.getElementById(
+            "mo_ta"
+        ).value = book.mo_ta || "";
+
+
+        // Lưu ID sách đang sửa
+        window.editingBookId = id;
+
+
+        // Đổi tiêu đề form
+
+        document.querySelector(
+            "#add-book-form h2"
+        ).textContent = "✏️ Sửa thông tin sách";
+
+
+    } catch (error) {
+
+        console.error(
+            "Lỗi sửa sách:",
+            error
+        );
+
+        alert(
+            "❌ Không thể lấy thông tin sách."
+        );
+
+    }
+
+}
+
+// ==========================================
+// XÓA SÁCH
+// ==========================================
+
+async function deleteBook(id) {
+
+    // Tìm thông tin sách
+    try {
+
+        const response = await fetch("/admin/books");
+
+        if (!response.ok) {
+            throw new Error("Không thể lấy danh sách sách.");
+        }
+
+        const books = await response.json();
+
+        const book = books.find(function(item) {
+            return item.id === id;
+        });
+
+        if (!book) {
+
+            alert("❌ Không tìm thấy sách.");
+
+            return;
+        }
+
+        // Xác nhận trước khi xóa
+        const confirmed = confirm(
+            "⚠️ Bạn có chắc muốn xóa sách:\n\n" +
+            book.ten_sach +
+            "\n\nMã sách: " +
+            book.ma_sach
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        // Gửi yêu cầu xóa
+        const deleteResponse = await fetch(
+            "/admin/books/" + id,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const data = await deleteResponse.json();
+
+        if (!deleteResponse.ok) {
+
+            alert(
+                "❌ " +
+                (
+                    data.error ||
+                    "Không thể xóa sách."
+                )
+            );
+
+            return;
+        }
+
+        alert("✅ Xóa sách thành công!");
+
+        // Tải lại danh sách
+        loadBooks();
+
+    } catch (error) {
+
+        console.error(
+            "Lỗi xóa sách:",
+            error
+        );
+
+        alert(
+            "❌ Không thể kết nối đến máy chủ."
+        );
+
+    }
+}
+
+        // ==========================================
+        // CHẠY KHI MỞ TRANG
+        // ==========================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                loadBooks();
+
+            }
+        );
+// ==========================================
+// HIỆN FORM THÊM SÁCH
+// ==========================================
+
+function showAddBookForm() {
+
+    window.editingBookId = null;
+
+    document.getElementById(
+        "add-book-form"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "book-form"
+    ).reset();
+
+
+    document.querySelector(
+        "#add-book-form h2"
+    ).textContent = "➕ Thêm sách mới";
+
+}
+
+
+
+// ==========================================
+// ẨN FORM THÊM SÁCH
+// ==========================================
+
+function hideAddBookForm() {
+
+    document.getElementById(
+        "add-book-form"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "book-form"
+    ).reset();
+
+
+    window.editingBookId = null;
+
+
+    document.querySelector(
+        "#add-book-form h2"
+    ).textContent = "➕ Thêm sách mới";
+
+}
+
+// ==========================================
+// LƯU SÁCH
+// ==========================================
+
+document.getElementById(
+    "book-form"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const bookData = {
+
+            ma_sach:
+                document.getElementById(
+                    "ma_sach"
+                ).value.trim(),
+
+            ten_sach:
+                document.getElementById(
+                    "ten_sach"
+                ).value.trim(),
+
+            tac_gia:
+                document.getElementById(
+                    "tac_gia"
+                ).value.trim(),
+
+            the_loai:
+                document.getElementById(
+                    "the_loai"
+                ).value.trim(),
+
+            nam_xuat_ban:
+                document.getElementById(
+                    "nam_xuat_ban"
+                ).value,
+
+            nha_xuat_ban:
+                document.getElementById(
+                    "nha_xuat_ban"
+                ).value.trim(),
+
+            vi_tri:
+                document.getElementById(
+                    "vi_tri"
+                ).value.trim(),
+
+            so_luong:
+                document.getElementById(
+                    "so_luong"
+                ).value,
+
+            mo_ta:
+                document.getElementById(
+                    "mo_ta"
+                ).value.trim()
+
+        };
+
+
+        // ==========================================
+        // XÁC ĐỊNH THÊM HAY SỬA
+        // ==========================================
+
+        let url = "/admin/books";
+
+        let method = "POST";
+
+
+        // Nếu có ID → đang sửa
+        if (window.editingBookId) {
+
+            url =
+                "/admin/books/" +
+                window.editingBookId;
+
+            method = "PUT";
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: method,
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                bookData
+                            )
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    "❌ " +
+                    (
+                        data.error ||
+                        "Không thể lưu sách."
+                    )
+                );
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // THÔNG BÁO
+            // ==========================================
+
+            if (method === "POST") {
+
+                alert(
+                    "✅ Thêm sách thành công!"
+                );
+
+            } else {
+
+                alert(
+                    "✅ Cập nhật sách thành công!"
+                );
+
+            }
+
+
+            // Đóng form
+            hideAddBookForm();
+
+
+            // Tải lại danh sách
+            loadBooks();
+
+
+        } catch (error) {
+
+            console.error(
+                "Lỗi lưu sách:",
+                error
+            );
+
+
+            alert(
+                "❌ Không thể kết nối đến máy chủ."
+            );
+
+        }
+
+    }
+);
+    </script>
+
+</body>
+</html>
